@@ -1,0 +1,14 @@
+FROM artifactory.saic-ailab.com/apal-docker-dev/system/apal_common:apal1.5.2
+
+# ========================================
+
+COPY . ${CONTAINER_AUTO_WS}/src/task_tour_manager
+
+RUN /bin/bash -c "source /opt/ros/melodic/setup.bash && source ${CONTAINER_AUTO_WS}/install/setup.bash && \
+    catkin_make -DCMAKE_BUILD_TYPE=RelWithDebInfo -C ${CONTAINER_AUTO_WS} -DENABLE_MSIM_PROVIDER=OFF -j4 install"
+# =================
+COPY start.sh /start.sh
+COPY entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/start.sh"]
